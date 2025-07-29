@@ -102,19 +102,19 @@ const GameDetailPage = ({ gameId }: GameDetailPageProps) => {
                 <div className="grid grid-cols-2 gap-4">
                   <div>
                     <label className="text-sm text-muted-foreground">Rank</label>
-                    <p className="font-semibold text-gaming-primary">{gameData.details.rank}</p>
+                    <p className="font-semibold text-gaming-primary">{gameData.details?.rank || "N/A"}</p>
                   </div>
                   <div>
                     <label className="text-sm text-muted-foreground">Region</label>
-                    <p className="font-semibold">{gameData.details.region}</p>
+                    <p className="font-semibold">{gameData.details?.region || "N/A"}</p>
                   </div>
                   <div>
                     <label className="text-sm text-muted-foreground">Level</label>
-                    <p className="font-semibold">{gameData.details.level}</p>
+                    <p className="font-semibold">{gameData.details?.level || "N/A"}</p>
                   </div>
                   <div>
                     <label className="text-sm text-muted-foreground">Win Rate</label>
-                    <p className="font-semibold text-gaming-success">{gameData.details.stats.winRate}</p>
+                    <p className="font-semibold text-gaming-success">{gameData.details?.stats?.winRate || "N/A"}</p>
                   </div>
                 </div>
 
@@ -123,20 +123,20 @@ const GameDetailPage = ({ gameId }: GameDetailPageProps) => {
                 <div>
                   <label className="text-sm text-muted-foreground mb-2 block">Premium Skins</label>
                   <div className="flex flex-wrap gap-2">
-                    {gameData.details.skins.map((skin) => (
+                    {gameData.details?.skins?.map((skin) => (
                       <Badge key={skin} variant="secondary">{skin}</Badge>
-                    ))}
+                    )) || <Badge variant="secondary">No skins available</Badge>}
                   </div>
                 </div>
 
                 <div>
                   <label className="text-sm text-muted-foreground mb-2 block">Achievements</label>
                   <div className="flex flex-wrap gap-2">
-                    {gameData.details.achievements.map((achievement) => (
+                    {gameData.details?.achievements?.map((achievement) => (
                       <Badge key={achievement} className="bg-gaming-accent/20 text-gaming-accent border-gaming-accent/30">
                         {achievement}
                       </Badge>
-                    ))}
+                    )) || <Badge variant="secondary">No achievements available</Badge>}
                   </div>
                 </div>
               </CardContent>
@@ -159,38 +159,44 @@ const GameDetailPage = ({ gameId }: GameDetailPageProps) => {
               </CardHeader>
               <CardContent className="space-y-4">
                 {showCredentials ? (
-                  <>
-                    <div className="flex items-center gap-2">
-                      <div className="flex-1">
-                        <label className="text-sm text-muted-foreground">Email</label>
-                        <p className="font-mono bg-secondary/50 p-2 rounded border">
-                          {gameData.credentials.email}
-                        </p>
+                  gameData.credentials ? (
+                    <>
+                      <div className="flex items-center gap-2">
+                        <div className="flex-1">
+                          <label className="text-sm text-muted-foreground">Email</label>
+                          <p className="font-mono bg-secondary/50 p-2 rounded border">
+                            {gameData.credentials.email}
+                          </p>
+                        </div>
+                        <Button
+                          size="sm"
+                          variant="outline"
+                          onClick={() => copyToClipboard(gameData.credentials!.email, 'Email')}
+                        >
+                          <Copy className="h-4 w-4" />
+                        </Button>
                       </div>
-                      <Button
-                        size="sm"
-                        variant="outline"
-                        onClick={() => copyToClipboard(gameData.credentials.email, 'Email')}
-                      >
-                        <Copy className="h-4 w-4" />
-                      </Button>
-                    </div>
-                    <div className="flex items-center gap-2">
-                      <div className="flex-1">
-                        <label className="text-sm text-muted-foreground">Password</label>
-                        <p className="font-mono bg-secondary/50 p-2 rounded border">
-                          {gameData.credentials.password}
-                        </p>
+                      <div className="flex items-center gap-2">
+                        <div className="flex-1">
+                          <label className="text-sm text-muted-foreground">Password</label>
+                          <p className="font-mono bg-secondary/50 p-2 rounded border">
+                            {gameData.credentials.password}
+                          </p>
+                        </div>
+                        <Button
+                          size="sm"
+                          variant="outline"
+                          onClick={() => copyToClipboard(gameData.credentials!.password, 'Password')}
+                        >
+                          <Copy className="h-4 w-4" />
+                        </Button>
                       </div>
-                      <Button
-                        size="sm"
-                        variant="outline"
-                        onClick={() => copyToClipboard(gameData.credentials.password, 'Password')}
-                      >
-                        <Copy className="h-4 w-4" />
-                      </Button>
-                    </div>
-                  </>
+                    </>
+                  ) : (
+                    <p className="text-muted-foreground text-center py-4">
+                      No credentials available for this account
+                    </p>
+                  )
                 ) : (
                   <p className="text-muted-foreground text-center py-4">
                     Click "Show" to reveal account credentials
@@ -217,11 +223,11 @@ const GameDetailPage = ({ gameId }: GameDetailPageProps) => {
                 </div>
                 <div className="flex items-center justify-between">
                   <span className="text-muted-foreground">K/D Ratio</span>
-                  <span className="font-semibold text-gaming-primary">{gameData.details.stats.kd}</span>
+                  <span className="font-semibold text-gaming-primary">{gameData.details?.stats?.kd || "N/A"}</span>
                 </div>
                 <div className="flex items-center justify-between">
                   <span className="text-muted-foreground">Total Matches</span>
-                  <span className="font-semibold">{gameData.details.stats.matches}</span>
+                  <span className="font-semibold">{gameData.details?.stats?.matches || "N/A"}</span>
                 </div>
               </CardContent>
             </Card>

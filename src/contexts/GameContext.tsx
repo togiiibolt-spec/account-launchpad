@@ -217,10 +217,38 @@ const initialGames: Game[] = [
 ];
 
 export const GameProvider = ({ children }: { children: ReactNode }) => {
-  const [games, setGames] = useState<Game[]>(initialGames);
+  // Load games from localStorage on initialization
+  const loadGamesFromStorage = (): Game[] => {
+    try {
+      const stored = localStorage.getItem('gameVaultGames');
+      if (stored) {
+        const parsedGames = JSON.parse(stored);
+        // Merge with initial games, avoiding duplicates
+        const initialIds = initialGames.map(g => g.id);
+        const userGames = parsedGames.filter((g: Game) => !initialIds.includes(g.id));
+        return [...initialGames, ...userGames];
+      }
+    } catch (error) {
+      console.error('Error loading games from localStorage:', error);
+    }
+    return initialGames;
+  };
+
+  const [games, setGames] = useState<Game[]>(loadGamesFromStorage);
+
+  // Save games to localStorage whenever games change
+  const saveGamesToStorage = (gamesList: Game[]) => {
+    try {
+      localStorage.setItem('gameVaultGames', JSON.stringify(gamesList));
+    } catch (error) {
+      console.error('Error saving games to localStorage:', error);
+    }
+  };
 
   const addGame = (game: Game) => {
-    setGames(prev => [...prev, game]);
+    const updatedGames = [...games, game];
+    setGames(updatedGames);
+    saveGamesToStorage(updatedGames);
   };
 
   const getGame = (id: string) => {
