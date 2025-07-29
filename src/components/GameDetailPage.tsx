@@ -5,6 +5,7 @@ import { Badge } from "@/components/ui/badge";
 import { Separator } from "@/components/ui/separator";
 import { ArrowLeft, Star, Users, Shield, Copy, Eye, EyeOff } from "lucide-react";
 import { toast } from "sonner";
+import { useGames } from "@/contexts/GameContext";
 
 interface GameDetailPageProps {
   gameId: string;
@@ -12,35 +13,28 @@ interface GameDetailPageProps {
 
 const GameDetailPage = ({ gameId }: GameDetailPageProps) => {
   const [showCredentials, setShowCredentials] = useState(false);
+  const { getGame } = useGames();
   
-  // Sample data - this would come from your backend based on gameId
-  const gameData = {
-    id: gameId,
-    title: "Valorant Premium Account",
-    description: "High-rank Valorant account with exclusive skins and competitive achievements. Perfect for players looking to experience premium content.",
-    image: "https://images.unsplash.com/photo-1560472354-b33ff0c44a43?w=800&h=400&fit=crop",
-    category: "FPS",
-    rating: 4.9,
-    verified: true,
-    submittedBy: "GameMaster123",
-    submittedDate: "2024-01-15",
-    details: {
-      rank: "Immortal 2",
-      region: "NA",
-      level: 156,
-      skins: ["Prime Vandal", "Elderflame Operator", "Reaver Sheriff"],
-      achievements: ["Ace Machine", "Clutch King", "Ranked Warrior"],
-      stats: {
-        winRate: "73%",
-        kd: "1.45",
-        matches: "1,247"
-      }
-    },
-    credentials: {
-      email: "example@email.com",
-      password: "SecurePass123!"
-    }
-  };
+  const gameData = getGame(gameId);
+
+  if (!gameData) {
+    return (
+      <div className="min-h-screen bg-background flex items-center justify-center">
+        <div className="text-center">
+          <h1 className="text-2xl font-bold mb-2">Game Not Found</h1>
+          <p className="text-muted-foreground">The requested game could not be found.</p>
+          <Button 
+            variant="outline" 
+            className="mt-4"
+            onClick={() => window.history.back()}
+          >
+            <ArrowLeft className="mr-2 h-4 w-4" />
+            Go Back
+          </Button>
+        </div>
+      </div>
+    );
+  }
 
   const copyToClipboard = (text: string, label: string) => {
     navigator.clipboard.writeText(text);

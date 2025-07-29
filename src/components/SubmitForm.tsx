@@ -8,8 +8,10 @@ import { Badge } from "@/components/ui/badge";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Upload, Link, CheckCircle } from "lucide-react";
 import { toast } from "sonner";
+import { useGames } from "@/contexts/GameContext";
 
 const SubmitForm = () => {
+  const { addGame } = useGames();
   const [formData, setFormData] = useState({
     gameTitle: "",
     category: "",
@@ -26,9 +28,44 @@ const SubmitForm = () => {
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     
-    // Generate virtual URL based on game title
+    // Generate unique ID and URL based on game title
     const slug = formData.gameTitle.toLowerCase().replace(/[^a-z0-9]/g, '-').replace(/-+/g, '-');
-    const virtualUrl = `/game/${slug}-${Date.now()}`;
+    const gameId = `${slug}-${Date.now()}`;
+    const virtualUrl = `/game/${gameId}`;
+    
+    // Create new game object
+    const newGame = {
+      id: gameId,
+      title: formData.gameTitle,
+      description: formData.description,
+      image: formData.imageUrl || "https://images.unsplash.com/photo-1542751371-adc38448a05e?w=400&h=200&fit=crop",
+      accounts: 1,
+      rating: 4.5,
+      category: formData.category,
+      verified: false,
+      url: virtualUrl,
+      submittedBy: "User",
+      submittedDate: new Date().toISOString().split('T')[0],
+      details: {
+        rank: "User Submitted",
+        region: "Global",
+        level: 1,
+        skins: formData.accountDetails.split(',').map(item => item.trim()).filter(Boolean),
+        achievements: ["New Account"],
+        stats: {
+          winRate: "N/A",
+          kd: "N/A",
+          matches: "N/A"
+        }
+      },
+      credentials: formData.email && formData.password ? {
+        email: formData.email,
+        password: formData.password
+      } : undefined
+    };
+    
+    // Add game to context
+    addGame(newGame);
     
     setGeneratedUrl(`${window.location.origin}${virtualUrl}`);
     setIsSubmitted(true);
