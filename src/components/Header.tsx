@@ -2,6 +2,7 @@ import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Gamepad2, User, Shield, LogIn, UserPlus } from "lucide-react";
 import { useState } from "react";
+import { Link } from "react-router-dom";
 
 const Header = () => {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
@@ -23,15 +24,15 @@ const Header = () => {
           </div>
 
           <nav className="hidden md:flex items-center space-x-6">
-            <a href="/" className="text-foreground hover:text-gaming-primary transition-colors">
+            <Link to="/" className="text-foreground hover:text-gaming-primary transition-colors">
               Games
-            </a>
-            <a href="/submit" className="text-foreground hover:text-gaming-primary transition-colors">
+            </Link>
+            <Link to="/submit" className="text-foreground hover:text-gaming-primary transition-colors">
               Submit Account
-            </a>
-            <a href="/about" className="text-foreground hover:text-gaming-primary transition-colors">
+            </Link>
+            <Link to="/about" className="text-foreground hover:text-gaming-primary transition-colors">
               About
-            </a>
+            </Link>
           </nav>
 
           <div className="flex items-center space-x-3">
