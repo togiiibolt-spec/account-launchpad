@@ -8,8 +8,8 @@ const Hero = () => {
     <section className="relative min-h-[80vh] flex items-center justify-center overflow-hidden">
       {/* Background Image */}
       <div 
-        className="absolute inset-0 bg-cover bg-center bg-no-repeat opacity-20"
-        style={{ backgroundImage: `url(${heroImage})` }}
+        className="absolute inset-0 bg-cover bg-center bg-no-repeat opacity-30"
+        style={{ backgroundImage: `url('/lovable-uploads/fe561248-1b3a-4769-8f0e-16e1e57539f6.png')` }}
       />
       
       {/* Gradient Overlay */}
